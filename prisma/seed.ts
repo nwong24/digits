@@ -1,8 +1,14 @@
+/*
 import { PrismaClient, Role, Condition } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
+*/
+import { prisma } from '../src/lib/prisma';
+import { Role, Condition } from '../generated/prisma/enums';
+import { hash } from 'bcrypt';
+import config from '../config/settings.development.json';
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 async function main() {
   console.log('Seeding the database');
@@ -32,6 +38,21 @@ async function main() {
         quantity: data.quantity,
         owner: data.owner,
         condition,
+      },
+    });
+  }
+  for (const contact of config.defaultContacts) {
+    console.log(`  Adding contact: ${contact.firstName} ${contact.lastName}`);
+    await prisma.contact.upsert({
+      where: { id: config.defaultContacts.indexOf(contact) + 1 },
+      update: {},
+      create: {
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        address: contact.address,
+        image: contact.image,
+        description: contact.description,
+        owner: contact.owner,
       },
     });
   }
