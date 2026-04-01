@@ -1,7 +1,7 @@
 'use server';
 
 import { Condition } from '../../generated/prisma/enums';
-import { Stuff } from '../../generated/prisma/client';
+import { Contact, Stuff } from '../../generated/prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
@@ -48,6 +48,43 @@ export async function editStuff(stuff: Stuff) {
     },
   });
   // After updating, redirect to the list page
+  redirect('/list');
+}
+
+/**
+ * Adds a new contact to the database.
+ * @param contact, an object with the following properties: firstName, lastName, address, image, description, owner.
+ */
+export async function addContact(contact: Omit<Contact, 'id'>) {
+  await prisma.contact.create({
+    data: {
+      firstName: contact.firstName,
+      lastName: contact.lastName,
+      address: contact.address,
+      image: contact.image,
+      description: contact.description,
+      owner: contact.owner,
+    },
+  });
+  redirect('/list');
+}
+
+/**
+ * Edits an existing contact in the database.
+ * @param contact, an object with the following properties: id, firstName, lastName, address, image, description, owner.
+ */
+export async function editContact(contact: Contact) {
+  await prisma.contact.update({
+    where: { id: contact.id },
+    data: {
+      firstName: contact.firstName,
+      lastName: contact.lastName,
+      address: contact.address,
+      image: contact.image,
+      description: contact.description,
+      owner: contact.owner,
+    },
+  });
   redirect('/list');
 }
 
