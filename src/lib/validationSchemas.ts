@@ -10,6 +10,14 @@ export interface Contact {
   owner: string;
 }
 
+export interface Note {
+  id?: number;
+  note: string;
+  contactId: number;
+  owner: string;
+  createdAt?: Date | string;
+}
+
 export const AddStuffSchema = Yup.object({
   name: Yup.string().required(),
   quantity: Yup.number().positive().required(),
@@ -41,5 +49,11 @@ export const EditContactSchema = Yup.object({
   address: Yup.string().required(),
   image: Yup.string().required(),
   description: Yup.string().required(),
+  owner: Yup.string().required(),
+});
+
+export const AddNoteSchema = Yup.object({
+  note: Yup.string().required(),
+  contactId: Yup.number().required(),
   owner: Yup.string().required(),
 });

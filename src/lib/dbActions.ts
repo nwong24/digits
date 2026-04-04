@@ -1,7 +1,7 @@
 'use server';
 
 import { Condition } from '../../generated/prisma/enums';
-import { Contact, Stuff } from '../../generated/prisma/client';
+import { Contact, Note, Stuff } from '../../generated/prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
@@ -83,6 +83,21 @@ export async function editContact(contact: Contact) {
       image: contact.image,
       description: contact.description,
       owner: contact.owner,
+    },
+  });
+  redirect('/list');
+}
+
+/**
+ * Adds a new note to the database.
+ * @param note, an object with the following properties: note, contactId, owner.
+ */
+export async function addNote(note: Omit<Note, 'id' | 'createdAt'>) {
+  await prisma.note.create({
+    data: {
+      note: note.note,
+      contactId: note.contactId,
+      owner: note.owner,
     },
   });
   redirect('/list');
