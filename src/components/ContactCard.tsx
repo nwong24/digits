@@ -1,14 +1,17 @@
 "use client";
 
 import Link from 'next/link';
-import { Card } from 'react-bootstrap';
-import { Contact } from '@/lib/validationSchemas';
+import { Card, ListGroup } from 'react-bootstrap';
+import { Contact, Note } from '@/lib/validationSchemas';
+import NoteItem from '@/components/NoteItem';
+import AddNoteForm from '@/components/AddNoteForm';
 
 interface Props {
   contact: Contact;
+  notes: Note[];
 }
 
-const ContactCard = ({ contact }: Props) => (
+const ContactCard = ({ contact, notes }: Props) => (
   <Card className="h-100">
     <Card.Header className="d-flex align-items-center gap-3">
       <Card.Img
@@ -22,6 +25,10 @@ const ContactCard = ({ contact }: Props) => (
     </Card.Header>
     <Card.Body>
       <Card.Text>{contact.description}</Card.Text>
+      <ListGroup variant="flush" className="mt-3">
+        {notes.map((note) => <NoteItem key={note.id} note={note} />)}
+      </ListGroup>
+      <AddNoteForm contactId={contact.id!} />
     </Card.Body>
     <Card.Footer>
       <Link href={`/edit/${contact.id}`}>Edit</Link>
