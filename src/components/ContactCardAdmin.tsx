@@ -24,10 +24,12 @@ const ContactCardAdmin = ({ contact, notes }: Props) => (
     <Card.Body>
       <Card.Text>{contact.description}</Card.Text>
       <ListGroup variant="flush" className="mt-3">
-        {notes.map((note) => <NoteItem key={note.id} note={note} />)}
+        {notes.map((note) => <NoteItem key={note.id} note={note} showOwner />)}
       </ListGroup>
-      <p className="blockquote-footer mb-0">{contact.owner}</p>
     </Card.Body>
+    <Card.Footer className="text-body-secondary small">
+      Contact owner: {contact.owner}
+    </Card.Footer>
   </Card>
 );
 

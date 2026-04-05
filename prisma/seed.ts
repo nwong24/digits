@@ -1,5 +1,5 @@
 import { prisma } from '../src/lib/prisma';
-import { Condition, Role } from '../generated/prisma/enums';
+import { Role } from '../generated/prisma/enums';
 import { hash } from 'bcrypt';
 import config from '../config/settings.development.json';
 
@@ -19,20 +19,6 @@ async function main() {
       },
     });
   }
-  for (const [index, data] of config.defaultData.entries()) {
-    const condition = data.condition as Condition || Condition.good;
-    console.log(`  Adding stuff: ${JSON.stringify(data)}`);
-    await prisma.stuff.upsert({
-      where: { id: index + 1 },
-      update: {},
-      create: {
-        name: data.name,
-        quantity: data.quantity,
-        owner: data.owner,
-        condition,
-      },
-    });
-  }
   for (const [index, contact] of config.defaultContacts.entries()) {
     console.log(`  Adding contact: ${contact.firstName} ${contact.lastName}`);
     await prisma.contact.upsert({
@@ -45,6 +31,19 @@ async function main() {
         image: contact.image,
         description: contact.description,
         owner: contact.owner,
+      },
+    });
+  }
+
+  for (const [index, note] of config.defaultNotes.entries()) {
+    console.log(`  Adding note for contact ${note.contactId}`);
+    await prisma.note.upsert({
+      where: { id: index + 1 },
+      update: {},
+      create: {
+        note: note.note,
+        contactId: note.contactId,
+        owner: note.owner,
       },
     });
   }
